@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+service ProcessService {
+  rpc UpdateStatus (ProcessStatus) returns (Empty);
+  rpc GetAllStatuses (Empty) returns (ProcessStatusList);
+}
+
+message ProcessStatus {
+  string clientId = 1;
+  bool isRunning = 2;
+  string timestamp = 3;
+}
+
+message ProcessStatusList {
+  repeated ProcessStatus statuses = 1;
+}
+
+message Empty {}

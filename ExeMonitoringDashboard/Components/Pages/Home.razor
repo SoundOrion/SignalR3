@@ -4,10 +4,6 @@
 @using Microsoft.AspNetCore.SignalR.Client
 
 <h3>EXE Status Dashboard</h3>
-@foreach (var message in messages)
-{
-    <li>@message</li>
-}
 
 <ul>
     @if (_statuses == null || _statuses.Count == 0)
@@ -28,7 +24,6 @@
 @code {
     private List<ProcessStatus> _statuses = new();
     private HubConnection? _hubConnection;
-    private List<string> messages = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,8 +36,6 @@
         // SignalR でリアルタイム更新を受信
         _hubConnection.On<List<ProcessStatus>>("ReceiveStatusUpdate", (statuses) =>
         {
-            messages.Add("aaaaaaaa");
-
             _statuses = statuses;
 
             // foreach (var status in _statuses)

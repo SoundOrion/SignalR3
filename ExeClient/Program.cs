@@ -1,72 +1,57 @@
-﻿using Grpc.Net.Client;
-using ExeClient.Services;
+﻿using ExeClient.Services;
+using ExeClient;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
+using System;
+using System.Net.Http;
+using static Grpc.Core.Metadata;
 
-class Program
-{
-    private static readonly string clientId = Guid.NewGuid().ToString();
-    private static IProcessServiceClient _processServiceClientGrpc;
-    private static IProcessServiceClient _processServiceClientRest;
+//✅ リトライ(Retry)
 
-    static async Task Main()
+//最大 3 回リトライ
+//2 秒間隔の指数バックオフ
+//HTTP 500 (InternalServerError) の場合のみリトライ
+//✅ タイムアウト (Timeout)
+
+//リクエストが 10 秒以上かかったらキャンセル
+//✅ サーキットブレーカー (CircuitBreaker)
+
+//30秒間のリクエストのうち、50% 以上が失敗するとブレーク
+//最低 5 リクエスト以上で有効化
+//ブレーク状態になったら 15 秒間リクエストを拒否
+
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((hostContext, services) =>
     {
-        Console.WriteLine("=== EXE クライアント 起動 ===");
-
-        bool useGrpc = false;
-        bool useRest = true;
-
-        // gRPC クライアント
-        var grpcChannel = GrpcChannel.ForAddress("http://localhost:5291");
-        _processServiceClientGrpc = new ProcessServiceGrpcClient(grpcChannel);
-
-        // REST API クライアント
-        var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5291") };
-        _processServiceClientRest = new ProcessServiceRestClient(httpClient);
-
-        var tasks = new List<Task>();
-
-        if (useGrpc)
+        services.AddHttpClient<IProcessServiceClient, ProcessServiceRestClient>(client =>
         {
-            Console.WriteLine("[INFO] gRPC で状態を送信します。");
-            tasks.Add(SendStatusLoop(_processServiceClientGrpc));
-        }
-
-        if (useRest)
+            client.BaseAddress = new Uri("http://localhost:5291");
+        })
+        .AddResilienceHandler("HttpResilience", builder =>
         {
-            Console.WriteLine("[INFO] REST API で状態を送信します。");
-            tasks.Add(SendStatusLoop(_processServiceClientRest));
-        }
-
-        if (tasks.Count == 0)
-        {
-            Console.WriteLine("[ERROR] gRPC または REST API を有効にしてください（環境変数: USE_GRPC / USE_REST）");
-            return;
-        }
-
-        await Task.WhenAll(tasks);
-    }
-
-    static async Task SendStatusLoop(IProcessServiceClient serviceClient)
-    {
-        while (true)
-        {
-            var status = new ProcessStatus
+            builder.AddRetry(new HttpRetryStrategyOptions
             {
-                ClientId = clientId,
-                IsRunning = true,
-                Timestamp = DateTime.UtcNow.ToString("o")
-            };
+                MaxRetryAttempts = 3, // 最大3回リトライ
+                Delay = TimeSpan.FromSeconds(2), // リトライ間隔
+                BackoffType = DelayBackoffType.Exponential, // 指数バックオフ
+                ShouldHandle = args => ValueTask.FromResult(args.Outcome.Result?.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            });
 
-            try
-            {
-                await serviceClient.UpdateStatusAsync(status);
-                Console.WriteLine($"[{clientId}] 状態を送信しました ({serviceClient.GetType().Name})");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[{clientId}] エラー: {ex.Message} ({serviceClient.GetType().Name})");
-            }
+            builder.AddTimeout(TimeSpan.FromSeconds(10)); // 10秒でタイムアウト
 
-            await Task.Delay(5000);
-        }
-    }
-}
+            builder.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+            {
+                FailureRatio = 0.5, // 失敗率 50% 以上でブレーク
+                SamplingDuration = TimeSpan.FromSeconds(30), // 30秒間のリクエストを対象
+                MinimumThroughput = 5, // 最低 5 リクエストで判定
+                BreakDuration = TimeSpan.FromSeconds(15) // 15秒間ブレーク
+            });
+        });
+
+        services.AddHostedService<ProcessStatusReporterService>();
+    })
+    .Build();
+
+await host.RunAsync();

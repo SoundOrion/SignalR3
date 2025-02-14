@@ -1,4 +1,5 @@
 ﻿using ExeMonitoringServer.Services;
+using ExeMonitoringShared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExeMonitoringServer.Controllers;

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ExeClient.Services;
+using ExeMonitoringShared;
 
 namespace ExeClient;
 
@@ -29,7 +30,7 @@ public class ProcessStatusReporterService : BackgroundService
             {
                 ClientId = _clientId,
                 IsRunning = true,
-                Timestamp = DateTime.UtcNow.ToString("o")
+                LastUpdated = DateTime.UtcNow
             };
 
             try

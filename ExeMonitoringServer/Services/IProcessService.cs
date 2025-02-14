@@ -1,4 +1,6 @@
-﻿namespace ExeMonitoringServer.Services;
+﻿using ExeMonitoringShared;
+
+namespace ExeMonitoringServer.Services;
 
 public interface IProcessService
 {

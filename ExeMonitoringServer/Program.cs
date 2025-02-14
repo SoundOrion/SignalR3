@@ -1,4 +1,3 @@
-using ExeMonitoringServer.Hubs;
 using ExeMonitoringServer.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //builder.Services.AddGrpc();
 builder.Services.AddSignalR();
-builder.Services.AddSingleton<IProcessService, ProcessServiceGrpc>();
+builder.Services.AddSingleton<IProcessService, ProcessServiceRest>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

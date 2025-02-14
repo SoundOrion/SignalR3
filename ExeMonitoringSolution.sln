@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExeClient", "ExeClient\ExeC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExeMonitoringDashboard", "ExeMonitoringDashboard\ExeMonitoringDashboard.csproj", "{CF1F5205-86DD-4F51-AD7B-463B575A46C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExeMonitoringShared", "ExeMonitoringShared\ExeMonitoringShared.csproj", "{4C0A352B-D77E-44B7-A4E9-24B108B7EF1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{CF1F5205-86DD-4F51-AD7B-463B575A46C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF1F5205-86DD-4F51-AD7B-463B575A46C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF1F5205-86DD-4F51-AD7B-463B575A46C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C0A352B-D77E-44B7-A4E9-24B108B7EF1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C0A352B-D77E-44B7-A4E9-24B108B7EF1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C0A352B-D77E-44B7-A4E9-24B108B7EF1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C0A352B-D77E-44B7-A4E9-24B108B7EF1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

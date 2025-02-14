@@ -4,9 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Http.Resilience;
 using Polly;
-using System;
-using System.Net.Http;
-using static Grpc.Core.Metadata;
 
 //✅ リトライ(Retry)
 

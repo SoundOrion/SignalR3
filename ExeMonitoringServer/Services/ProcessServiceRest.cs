@@ -1,4 +1,4 @@
-﻿using ExeMonitoringServer.Hubs;
+﻿using ExeMonitoringShared;
 using Microsoft.AspNetCore.SignalR;
 using System.Collections.Concurrent;
 
@@ -6,7 +6,6 @@ namespace ExeMonitoringServer.Services;
 
 public class ProcessServiceRest : IProcessService
 {
-    private static ConcurrentDictionary<string, ProcessStatus> _processes = new();
     private readonly IHubContext<ProcessHub> _hubContext;
 
     public ProcessServiceRest(IHubContext<ProcessHub> hubContext)
@@ -16,12 +15,15 @@ public class ProcessServiceRest : IProcessService
 
     public async Task UpdateStatusAsync(ProcessStatus status)
     {
-        _processes[status.ClientId] = status;
-        await _hubContext.Clients.All.SendAsync("ReceiveStatusUpdate", _processes.Values);
+        // ✅ `ProcessHub` の `_processes` にデータを保存
+        ProcessHub.UpdateProcessStatus(status);
+
+        // ✅ 正しいイベント名 `ReceiveStatusUpdate` を使って送信
+        await _hubContext.Clients.All.SendAsync("ReceiveStatusUpdate", ProcessHub.GetAllProcessStatuses());
     }
 
     public async Task<List<ProcessStatus>> GetAllStatusesAsync()
     {
-        return _processes.Values.ToList();
+        return ProcessHub.GetAllProcessStatuses();
     }
 }

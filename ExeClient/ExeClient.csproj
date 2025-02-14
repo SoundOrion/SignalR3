@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.2.0" />
@@ -18,13 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Protos\process.proto">
-      <GrpcServices>Server</GrpcServices>
-    </None>
+    <ProjectReference Include="..\ExeMonitoringShared\ExeMonitoringShared.csproj" />
   </ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Protos\process.proto" GrpcServices="Client" />
-	</ItemGroup>
 	
 </Project>

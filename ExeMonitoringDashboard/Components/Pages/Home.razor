@@ -1,6 +1,6 @@
 ﻿@page "/"
 @page "/status"
-@using ExeMonitoringDashboard.Models
+@using ExeMonitoringShared
 @using Microsoft.AspNetCore.SignalR.Client
 
 <h3>EXE Status Dashboard</h3>
@@ -24,6 +24,7 @@
 @code {
     private List<ProcessStatus> _statuses = new();
     private HubConnection? _hubConnection;
+    private List<string> messages = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {

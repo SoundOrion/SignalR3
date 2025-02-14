@@ -1,0 +1,39 @@
+﻿/* フィルターコンテナ */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* フィルタードロップダウン */
+.filter-dropdown {
+    background-color: #2d3748;
+    color: white;
+    border: 1px solid #4a5568;
+    padding: 5px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+/* ステータスカード（変わらず） */
+.status-card {
+    background-color: #2d3748;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ステータス表示 */
+.status-running {
+    color: #48bb78;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.status-stopped {
+    color: #e53e3e;
+    font-weight: bold;
+    font-size: 1.1rem;
+}

@@ -47,7 +47,7 @@ var host = Host.CreateDefaultBuilder(args)
             });
         });
 
-        services.AddHostedService<ProcessStatusReporterService>();
+        services.AddHostedService<HeartbeatService>();
     })
     .Build();
 

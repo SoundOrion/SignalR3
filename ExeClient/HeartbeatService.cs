@@ -8,13 +8,13 @@ using ExeMonitoringShared;
 
 namespace ExeClient;
 
-public class ProcessStatusReporterService : BackgroundService
+public class HeartbeatService : BackgroundService
 {
-    private readonly ILogger<ProcessStatusReporterService> _logger;
+    private readonly ILogger<HeartbeatService> _logger;
     private readonly IProcessServiceClient _serviceClient;
     private readonly string _clientId = Guid.NewGuid().ToString();
 
-    public ProcessStatusReporterService(IProcessServiceClient serviceClient, ILogger<ProcessStatusReporterService> logger)
+    public HeartbeatService(IProcessServiceClient serviceClient, ILogger<HeartbeatService> logger)
     {
         _serviceClient = serviceClient;
         _logger = logger;

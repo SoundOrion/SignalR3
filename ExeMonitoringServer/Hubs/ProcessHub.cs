@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,6 +58,19 @@ public class ProcessHub : Hub
         }
     }
 
+    private bool PingClient(string ipAddress)
+    {
+        try
+        {
+            using Ping ping = new();
+            PingReply reply = ping.Send(ipAddress, 2000);
+            return reply.Status == IPStatus.Success;
+        }
+        catch
+        {
+            return false;
+        }
+    }
     public static List<ProcessStatus> GetAllProcessStatuses()
     {
         return _processes.Values.ToList();
